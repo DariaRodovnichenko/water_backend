@@ -19,7 +19,6 @@ app.use(express.json());
 
 app.use("/api/auth", authRouter);
 <<<<<<< Updated upstream
-app.use("/api/contacts", contactsRouter);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 =======
 app.use("/api/water", waterRouter);
