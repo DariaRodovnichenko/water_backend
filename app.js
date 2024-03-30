@@ -18,11 +18,8 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/auth", authRouter);
-<<<<<<< Updated upstream
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-=======
 app.use("/api/water", waterRouter);
->>>>>>> Stashed changes
 
 app.use((req, res) => {
   res.status(404).json({ message: "Not found" });
