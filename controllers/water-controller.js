@@ -1,0 +1,144 @@
+import Water from "../models/Water.js";
+import { HttpError } from "../helpers/index.js";
+import { ctrlWrapper } from "../decorators/index.js";
+
+const getAllWater = async (req, res) => {
+  const { _id: user } = req.user;
+  const { page = 1, limit = 10, ...filterParams } = req.query;
+  const skip = (page - 1) * limit;
+  const filter = { user, ...filterParams };
+
+  const [result, total] = await Promise.all([
+    Water.find(filter, "-createdAt -updatedAt")
+      .populate("user", "name email gender waterLimit")
+      .skip(skip)
+      .limit(limit),
+    Water.countDocuments(filter),
+  ]);
+
+  res.json({ result, total });
+};
+
+const getWaterById = async (req, res) => {
+  const { _id: user } = req.user;
+  const { id } = req.params;
+  const result = await Water.findOne({ _id: id, user });
+  if (!result) {
+    throw HttpError(404, "Not found");
+  }
+  res.json(result);
+};
+
+const addWater = async (req, res) => {
+  const { _id: user } = req.user;
+  const result = await Water.create({ ...req.body, user });
+  res.status(201).json(result);
+};
+
+const deleteWaterById = async (req, res) => {
+  const { _id: user } = req.user;
+  const { id } = req.params;
+  const result = await Water.findOneAndDelete({ _id: id, user });
+  if (!result) {
+    throw HttpError(404, `Not found`);
+  }
+  res.json({ message: "Delete successful" });
+};
+
+const updateWaterById = async (req, res) => {
+  const { _id: user } = req.user;
+  const { id } = req.params;
+  const result = await Water.findOneAndUpdate({ _id: id, user }, req.body);
+  if (!result) {
+    throw HttpError(404, `Not found`);
+  }
+  res.json(result);
+};
+
+const getWaterByDate = async (req, res) => {
+  const { _id: user, waterLimit } = req.user;
+  const currentDate = new Date();
+  const startDate = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth(),
+    currentDate.getDate()
+  );
+  const endDate = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth(),
+    currentDate.getDate(),
+    23,
+    59,
+    59,
+    999
+  );
+
+  const filter = {
+    user,
+    date: { $gte: startDate, $lte: endDate },
+  };
+
+  const waterRecords = await Water.find(filter, "date waterAmount");
+  const allWaterAmount = waterRecords.reduce(
+    (acc, item) => acc + item.waterAmount,
+    0
+  );
+  const percentageWaterAmount = Math.round((allWaterAmount / waterLimit) * 100);
+
+  res.json({ user: { id: user }, waterRecords, percentageWaterAmount });
+};
+const getWaterByMonth = async (req, res) => {
+  const { _id: user, waterLimit } = req.user;
+  const { date } = req.query;
+  const [year, month] = date.split("-");
+
+  const startDate = new Date(year, month - 1, 1);
+  const endDate = new Date(year, month, 0, 23, 59, 59, 999);
+
+  const filter = {
+    user,
+    date: { $gte: startDate, $lte: endDate },
+  };
+
+  const waterRecords = await Water.aggregate([
+    { $match: filter },
+    {
+      $group: {
+        _id: { $dayOfMonth: "$date" },
+        sumWaterAmount: { $sum: "$waterAmount" },
+        count: { $sum: 1 },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        dayOfMonth: "$_id",
+        sumWaterAmount: 1,
+        count: 1,
+      },
+    },
+  ]);
+
+  const totalData = waterRecords.map((record) => {
+    const { dayOfMonth, sumWaterAmount, count } = record;
+    const percent = Math.round((sumWaterAmount / waterLimit) * 100);
+    return {
+      dayOfMonth,
+      waterLimit,
+      percent,
+      numberRecords: count,
+    };
+  });
+
+  res.json(totalData);
+};
+
+export default {
+  getAllWater: ctrlWrapper(getAllWater),
+  getWaterById: ctrlWrapper(getWaterById),
+  addWater: ctrlWrapper(addWater),
+  deleteWaterById: ctrlWrapper(deleteWaterById),
+  updateWaterById: ctrlWrapper(updateWaterById),
+  getWaterByDate: ctrlWrapper(getWaterByDate),
+  getWaterByMonth: ctrlWrapper(getWaterByMonth),
+};
