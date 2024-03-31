@@ -2,7 +2,7 @@ export default
 {
   "openapi": "3.0.1",
   "info": {
-    "version": "2.1.0",
+    "version": "2.1.1",
     "title": "Swagger Water API documentation",
     "description": "Showing off swagger-ui-express",
     "license": {
@@ -22,9 +22,9 @@ export default
       "name": "Water",
       "description": "Water comsumption endpoints"
     }
-
-
-  ],
+    ],
+  
+  
   "paths": {
     "/api/auth/signup": {
       "post": {
@@ -64,7 +64,46 @@ export default
           }
         }
       }
-    }
+    },
+    "/api/auth/signin": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User registration",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Registration's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {}
+          },
+          "409": {
+            "description": "Provided email already exists",
+            "content": {}
+          }
+        }
+      }
+    },
   },
   "components": {
     "schemas": {
