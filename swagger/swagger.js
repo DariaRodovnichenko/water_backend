@@ -2,8 +2,8 @@ export default
 {
   "openapi": "3.0.1",
   "info": {
-    "version": "2.0.2",
-    "title": "Swagger Documentation of Water API",
+    "version": "2.1.0",
+    "title": "Swagger Water API documentation",
     "description": "Showing off swagger-ui-express",
     "license": {
       "name": "MIT",
@@ -12,12 +12,18 @@ export default
   },
   "consumes": ["application/json"],
   "produces": ["application/json"],
-  "servers": [{ "url": "http://localhost:3000" }],
+  "servers": [{ "url": "https://water-backend-4k0b.onrender.com" }],
   "tags": [
     {
       "name": "Auth",
       "description": "Authorization endpoints"
+    },
+    {
+      "name": "Water",
+      "description": "Water comsumption endpoints"
     }
+
+
   ],
   "paths": {
     "/auth/register": {
