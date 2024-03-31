@@ -12,18 +12,20 @@ import { get } from "mongoose";
 const { JWT_SECRET } = process.env;
 
 const signup = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, username } = req.body;
   const user = await User.findOne({ email });
   if (user) {
     throw HttpError(409, "Email already exist");
   }
 
+  const name = username ? username : email.split('@')[0]; 
   const hashPassword = await bcrypt.hash(password, 10);
 
-  const newUser = await User.create({ ...req.body, password: hashPassword });
+  const newUser = await User.create({ username: name, email, password: hashPassword });
 
   res.status(201).json({
     username: newUser.username,
+    id: newUser._id,
     email: newUser.email,
   });
 };
@@ -52,10 +54,10 @@ const signin = async (req, res) => {
 };
 
 const getCurrent = async (req, res) => {
-  const { username, email } = req.user;
+  const { _id, email } = req.user;
 
   res.json({
-    username,
+    id: _id,
     email,
   });
 };
