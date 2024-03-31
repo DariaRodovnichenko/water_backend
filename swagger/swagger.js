@@ -2,7 +2,7 @@ export default
 {
   "openapi": "3.0.1",
   "info": {
-    "version": "2.1.1",
+    "version": "2.1.2",
     "title": "Swagger Water API documentation",
     "description": "Showing off swagger-ui-express",
     "license": {
@@ -68,16 +68,16 @@ export default
     "/api/auth/signin": {
       "post": {
         "tags": ["Auth"],
-        "summary": "User registration",
+        "summary": "User sign in",
         "parameters": [],
         "security": [{ "Bearer": [] }],
         "requestBody": {
-          "description": "Registration's object",
+          "description": "Sign-in object",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RegistrationRequest"
+                "$ref": "#/components/schemas/SignInRequest"
               }
             }
           }
@@ -88,7 +88,7 @@ export default
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RegistrationResponse"
+                  "$ref": "#/components/schemas/SignInResponse"
                 }
               }
             }
@@ -144,6 +144,38 @@ export default
           { "email": "1@gmail.com", "userId": "1" },
           { "email": "2@gmail.com", "userId": "2" }
         ]
+      },
+      "SignInRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email",
+            "example": "email5@example.com"
+
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "qwerty123"
+          }
+        }
+      },
+      "SignInResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "User's token",
+            "format": "token"
+          }
+        },
+        "example":
+          {
+            "token": "eyJhbGciOiJIUzI1NiIsInRpXVCasdfasDcxODU3YjE2MzA1ODY5NzRhMCIsImlhdCI6MTcxMTkwODAzMCwiZXhwIjoxNzExOTkwODMwfQ.gpjD2TtfIoVgVN9j4rerT73LN1XaOeHR6MAtWyXULQs"
+          }
       }
     },
     "securitySchemes": {
