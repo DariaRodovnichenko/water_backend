@@ -26,7 +26,7 @@ export default
 
   ],
   "paths": {
-    "/auth/register": {
+    "/api/auth/signup": {
       "post": {
         "tags": ["Auth"],
         "summary": "User registration",
