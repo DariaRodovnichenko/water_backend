@@ -84,7 +84,7 @@ export default
             }
           },
           "responses": {
-            "201": {
+            "200": {
               "description": "Successful operation",
               "content": {
                 "application/json": {
@@ -121,6 +121,28 @@ export default
                   }
                 }
               }
+            },
+            "400": {
+              "description": "Bad request (Authorization header not found)",
+              "content": {}
+            },
+            "401": {
+              "description": "invalid token",
+              "content": {}
+            }
+          }
+        }
+      },
+      "/api/auth/signout": {
+        "post": {
+          "tags": ["Auth"],
+          "summary": "Sign out current user",
+          "parameters": [],
+          "security": [{ "Bearer": [] }],
+          "responses": {
+            "200": {
+              "description": "Signout success",
+              "content": {}
             },
             "400": {
               "description": "Bad request (Authorization header not found)",
