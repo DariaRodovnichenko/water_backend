@@ -21,7 +21,6 @@ app.use("/api/auth", authRouter);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/api/water", waterRouter);
 
 app.use((req, res) => {
