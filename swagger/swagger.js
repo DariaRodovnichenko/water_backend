@@ -61,7 +61,7 @@ export default
               "content": {}
             },
             "409": {
-              "description": "Provided email already exists",
+              "description": "Email already exist",
               "content": {}
             }
           }
@@ -157,27 +157,33 @@ export default
           "items": {
             "type": "object",
             "properties": {
+              "id": {
+                "type": "string",
+                "description": "User's id",
+                "example": "66555d71857b1630586974a0"
+              },
+              "username": {
+                "type": "string",
+                "description": "User's name",
+                "example": "user"
+              },
               "email": {
                 "type": "string",
                 "description": "User's email",
                 "format": "email"
-              },
-              "userId": {
-                "type": "number",
-                "description": "User's id",
-                "example": "32143232436545474"
               }
             }
           },
-          "example": [
-            { "email": "1@gmail.com", "userId": "1" },
-            { "email": "2@gmail.com", "userId": "2" }
-          ]
+          "example": {
+            "id": "660ab0e3b7c42b904d9a5ed8",
+            "username": "email3",
+            "email": "email3@example.com"
+          }
         },
         "AuthCurrentResponse": {
           "type": "object",
           "properties": {
-            "userId": {
+            "id": {
               "type": "string",
               "description": "User's id",
               "example": "66555d71857b1630586974a0"
@@ -198,7 +204,6 @@ export default
               "description": "User's email",
               "format": "email",
               "example": "email5@example.com"
-
             },
             "password": {
               "type": "string",
