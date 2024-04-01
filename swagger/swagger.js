@@ -2,7 +2,7 @@ export default
 {
   "openapi": "3.0.1",
   "info": {
-    "version": "2.1.2",
+    "version": "2.1.3",
     "title": "Swagger Water API documentation",
     "description": "Showing off swagger-ui-express",
     "license": {
@@ -12,7 +12,10 @@ export default
   },
   "consumes": ["application/json"],
   "produces": ["application/json"],
-  "servers": [{ "url": "https://water-backend-4k0b.onrender.com" }],
+    "servers": [
+      { "url": "https://water-backend-4k0b.onrender.com" },
+      { "url": "http://localhost:3000" }
+    ],
   "tags": [
     {
       "name": "Auth",
@@ -31,7 +34,6 @@ export default
         "tags": ["Auth"],
         "summary": "User registration",
         "parameters": [],
-        "security": [{ "Bearer": [] }],
         "requestBody": {
           "description": "Registration's object",
           "required": true,
@@ -70,7 +72,6 @@ export default
         "tags": ["Auth"],
         "summary": "User sign in",
         "parameters": [],
-        "security": [{ "Bearer": [] }],
         "requestBody": {
           "description": "Sign-in object",
           "required": true,
@@ -104,6 +105,34 @@ export default
         }
       }
     },
+    "/api/auth/current": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Get current user",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {}
+          },
+          "409": {
+            "description": "Provided email already exists",
+            "content": {}
+          }
+        }
+      }
+    }
   },
   "components": {
     "schemas": {
