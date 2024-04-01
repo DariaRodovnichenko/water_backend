@@ -9,6 +9,7 @@ import waterRouter from "./routes/api/water-router.js";
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from "./swagger/swagger.js";
 
+
 const app = express();
 
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
