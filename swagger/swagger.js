@@ -1,112 +1,260 @@
 export default
-{
-  "openapi": "3.0.1",
-  "info": {
-    "version": "2.0.2",
-    "title": "Swagger Documentation of Water API",
-    "description": "Showing off swagger-ui-express",
-    "license": {
-      "name": "MIT",
-      "url": "https://opensource.org/licenses/MIT"
-    }
-  },
-  "consumes": ["application/json"],
-  "produces": ["application/json"],
-  "servers": [{ "url": "http://localhost:3000" }],
-  "tags": [
-    {
-      "name": "Auth",
-      "description": "Authorization endpoints"
-    }
-  ],
-  "paths": {
-    "/auth/register": {
-      "post": {
-        "tags": ["Auth"],
-        "summary": "User registration",
-        "parameters": [],
-        "security": [{ "Bearer": [] }],
-        "requestBody": {
-          "description": "Registration's object",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegistrationRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Successful operation",
+  {
+    "openapi": "3.0.1",
+    "info": {
+      "version": "2.1.3",
+      "title": "Swagger Water API documentation",
+      "description": "Showing off swagger-ui-express",
+      "license": {
+        "name": "MIT",
+        "url": "https://opensource.org/licenses/MIT"
+      }
+    },
+    "consumes": ["application/json"],
+    "produces": ["application/json"],
+    "servers": [
+      { "url": "https://water-backend-4k0b.onrender.com" },
+      { "url": "http://localhost:3000" }
+    ],
+    "tags": [
+      {
+        "name": "Auth",
+        "description": "Authorization endpoints"
+      },
+      {
+        "name": "Water",
+        "description": "Water comsumption endpoints"
+      }
+    ],
+
+
+    "paths": {
+      "/api/auth/signup": {
+        "post": {
+          "tags": ["Auth"],
+          "summary": "User registration",
+          "parameters": [],
+          "requestBody": {
+            "description": "Registration's object",
+            "required": true,
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RegistrationResponse"
+                  "$ref": "#/components/schemas/RegistrationRequest"
                 }
               }
             }
           },
-          "400": {
-            "description": "Bad request (invalid request body)",
-            "content": {}
-          },
-          "409": {
-            "description": "Provided email already exists",
-            "content": {}
-          }
-        }
-      }
-    }
-  },
-  "components": {
-    "schemas": {
-      "RegistrationRequest": {
-        "type": "object",
-        "required": ["email", "password"],
-        "properties": {
-          "email": {
-            "type": "string",
-            "description": "User's email",
-            "format": "email"
-          },
-          "password": {
-            "type": "string",
-            "description": "User's password",
-            "example": "qwerty123"
+          "responses": {
+            "201": {
+              "description": "Successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RegistrationResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request (invalid request body)",
+              "content": {}
+            },
+            "409": {
+              "description": "Email already exist",
+              "content": {}
+            }
           }
         }
       },
-      "RegistrationResponse": {
-        "type": "array",
-        "items": {
+      "/api/auth/signin": {
+        "post": {
+          "tags": ["Auth"],
+          "summary": "User sign in",
+          "parameters": [],
+          "requestBody": {
+            "description": "Sign-in object",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignInRequest"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/SignInResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request (invalid request body)",
+              "content": {}
+            },
+            "409": {
+              "description": "Provided email already exists",
+              "content": {}
+            }
+          }
+        }
+      },
+      "/api/auth/current": {
+        "get": {
+          "tags": ["Auth"],
+          "summary": "Get current user",
+          "parameters": [],
+          "security": [{ "Bearer": [] }],
+          "responses": {
+            "200": {
+              "description": "Successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AuthCurrentResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request (Authorization header not found)",
+              "content": {}
+            },
+            "401": {
+              "description": "invalid token",
+              "content": {}
+            }
+          }
+        }
+      },
+      "/api/auth/signout": {
+        "post": {
+          "tags": ["Auth"],
+          "summary": "Sign out current user",
+          "parameters": [],
+          "security": [{ "Bearer": [] }],
+          "responses": {
+            "200": {
+              "description": "Signout success",
+              "content": {}
+            },
+            "400": {
+              "description": "Bad request (Authorization header not found)",
+              "content": {}
+            },
+            "401": {
+              "description": "invalid token",
+              "content": {}
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "RegistrationRequest": {
           "type": "object",
+          "required": ["email", "password"],
           "properties": {
             "email": {
               "type": "string",
               "description": "User's email",
               "format": "email"
             },
-            "userId": {
-              "type": "number",
-              "description": "User's id",
-              "example": "32143232436545474"
+            "password": {
+              "type": "string",
+              "description": "User's password",
+              "example": "qwerty123"
             }
           }
         },
-        "example": [
-          { "email": "1@gmail.com", "userId": "1" },
-          { "email": "2@gmail.com", "userId": "2" }
-        ]
-      }
-    },
-    "securitySchemes": {
-      "Bearer": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
+        "RegistrationResponse": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "User's id",
+                "example": "66555d71857b1630586974a0"
+              },
+              "username": {
+                "type": "string",
+                "description": "User's name",
+                "example": "user"
+              },
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "format": "email"
+              }
+            }
+          },
+          "example": {
+            "id": "660ab0e3b7c42b904d9a5ed8",
+            "username": "email3",
+            "email": "email3@example.com"
+          }
+        },
+        "AuthCurrentResponse": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "User's id",
+              "example": "66555d71857b1630586974a0"
+            },
+            "email": {
+              "type": "string",
+              "description": "User's email",
+              "format": "email"
+            }
+          }
+        },
+        "SignInRequest": {
+          "type": "object",
+          "required": ["email", "password"],
+          "properties": {
+            "email": {
+              "type": "string",
+              "description": "User's email",
+              "format": "email",
+              "example": "email5@example.com"
+            },
+            "password": {
+              "type": "string",
+              "description": "User's password",
+              "example": "qwerty123"
+            }
+          }
+        },
+        "SignInResponse": {
+          "type": "object",
+          "properties": {
+            "token": {
+              "type": "string",
+              "description": "User's token",
+              "format": "token"
+            }
+          },
+          "example":
+          {
+            "token": "eyJhbGciOiJIUzI1NiIsInRpXVCasdfasDcxODU3YjE2MzA1ODY5NzRhMCIsImlhdCI6MTcxMTkwODAzMCwiZXhwIjoxNzExOTkwODMwfQ.gpjD2TtfIoVgVN9j4rerT73LN1XaOeHR6MAtWyXULQs"
+          }
+        }
+      },
+      "securitySchemes": {
+        "Bearer": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
       }
     }
   }
-}

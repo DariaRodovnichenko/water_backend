@@ -10,7 +10,7 @@ const getAllWater = async (req, res) => {
 
   const [result, total] = await Promise.all([
     Water.find(filter, "-createdAt -updatedAt")
-      .populate("user", "name email gender waterLimit")
+      .populate("user", "name email gender WaterRate")
       .skip(skip)
       .limit(limit),
     Water.countDocuments(filter),
@@ -56,7 +56,7 @@ const updateWaterById = async (req, res) => {
 };
 
 const getWaterByDate = async (req, res) => {
-  const { _id: user, waterLimit } = req.user;
+  const { _id: user, waterRate } = req.user;
   const currentDate = new Date();
   const startDate = new Date(
     currentDate.getFullYear(),
@@ -83,12 +83,12 @@ const getWaterByDate = async (req, res) => {
     (acc, item) => acc + item.waterAmount,
     0
   );
-  const percentageWaterAmount = Math.round((allWaterAmount / waterLimit) * 100);
+  const percentageWaterAmount = Math.round((allWaterAmount / waterRate) * 100);
 
   res.json({ user: { id: user }, waterRecords, percentageWaterAmount });
 };
 const getWaterByMonth = async (req, res) => {
-  const { _id: user, waterLimit } = req.user;
+  const { _id: user, waterRate } = req.user;
   const { date } = req.query;
   const [year, month] = date.split("-");
 
@@ -121,10 +121,10 @@ const getWaterByMonth = async (req, res) => {
 
   const totalData = waterRecords.map((record) => {
     const { dayOfMonth, sumWaterAmount, count } = record;
-    const percent = Math.round((sumWaterAmount / waterLimit) * 100);
+    const percent = Math.round((sumWaterAmount / waterRate) * 100);
     return {
       dayOfMonth,
-      waterLimit,
+      waterRate,
       percent,
       numberRecords: count,
     };
