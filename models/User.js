@@ -22,6 +22,13 @@ const userSchema = new Schema(
       minLength: 6,
       required: true,
     },
+    dailyrate: {
+      type: String,
+      minLength: 1,
+      maxLength: 2,
+      required: false,
+      default: "2",
+    },
     token: {
       type: String,
     }
