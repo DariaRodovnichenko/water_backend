@@ -22,15 +22,21 @@ const userSchema = new Schema(
       minLength: 6,
       required: true,
     },
-    dailyrate: {
-      type: String,
-      minLength: 1,
-      maxLength: 2,
+    waterRate: {
+      type: Number,
+      min: 0,
+      max: 15000,
+      default: 2000,
       required: false,
-      default: "2",
+    },
+    gender: {
+      type: String,
+      enum: ["male", "female"],
+      default: "male",
     },
     token: {
       type: String,
+      default: null
     }
   },
   { versionKey: false, timestamps: true }
