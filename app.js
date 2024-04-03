@@ -7,7 +7,8 @@ import authRouter from "./routes/api/auth-router.js";
 import waterRouter from "./routes/api/water-router.js";
 
 import swaggerUi from "swagger-ui-express";
-import swaggerDocument from "./swagger/swagger.js";
+import swaggerDoc from "./swagger.json" assert { type: "json" };
+import multer from "multer";
 
 const app = express();
 
@@ -19,7 +20,7 @@ app.use(express.json());
 
 app.use("/api/auth", authRouter);
 
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
 app.use("/api/water", waterRouter);
 
