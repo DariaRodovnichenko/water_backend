@@ -10,7 +10,7 @@ const getAllWater = async (req, res) => {
 
   const [result, total] = await Promise.all([
     Water.find(filter, "-createdAt -updatedAt")
-      .populate("user", "name email gender WaterRate")
+      .populate("user", "name email gender waterRate")
       .skip(skip)
       .limit(limit),
     Water.countDocuments(filter),
