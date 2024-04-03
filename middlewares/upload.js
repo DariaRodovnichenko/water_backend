@@ -4,11 +4,12 @@ import path from "path";
 import { HttpError } from "../helpers/index.js"
 
 const destination = path.resolve("tmp");
-
+console.log(destination);
 const storage = multer.diskStorage({
     destination,
     filename: (req, file, cb) => {
         const filename = file.originalname;
+        console.log(filename);
         cb(null, filename);
     }
 });

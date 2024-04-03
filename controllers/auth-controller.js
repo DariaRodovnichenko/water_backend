@@ -21,11 +21,11 @@ const signup = async (req, res) => {
   const name = username ? username : email.split('@')[0]; 
   const hashPassword = await bcrypt.hash(password, 10);
 
-  const newUser = await User.create({ username: name, email, password: hashPassword });
+  const newUser = await User.create({ userName: name, email, password: hashPassword });
 
   res.status(201).json({
     id: newUser._id,
-    username: newUser.username,
+    userName: newUser.userName,
     email: newUser.email,
   });
 };

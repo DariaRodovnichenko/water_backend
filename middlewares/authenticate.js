@@ -25,6 +25,7 @@ const authenticate = async (req, res, next) => {
       throw HttpError(401, "user not found");
     }
     req.user = user;
+    console.log('authentication successfully passed..', user);
     next();
   } catch (error) {
     throw HttpError(401, error.message);
