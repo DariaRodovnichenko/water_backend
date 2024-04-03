@@ -7,7 +7,7 @@ import User from "../models/User.js";
 import { ctrlWrapper } from "../decorators/index.js";
 
 import { HttpError } from "../helpers/index.js";
-import { get } from "mongoose";
+
 
 const { JWT_SECRET } = process.env;
 

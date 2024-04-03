@@ -5,6 +5,7 @@ import "dotenv/config";
 
 import authRouter from "./routes/api/auth-router.js";
 import waterRouter from "./routes/api/water-router.js";
+import userRouter from "./routes/api/userRouter.js";
 
 import swaggerUi from "swagger-ui-express";
 import swaggerDoc from "./swagger.json" assert { type: "json" };
@@ -20,6 +21,8 @@ app.use(express.json());
 
 app.use("/api/auth", authRouter);
 
+app.use("/api/users", userRouter);
+
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
 app.use("/api/water", waterRouter);
@@ -29,7 +32,10 @@ app.use((req, res) => {
 });
 
 app.use((err, req, res, next) => {
-  const { status = 500, message = "Server error" } = err;
+  const { status = err instanceof multer.MulterError
+    ? 400
+    : 500,
+    message = "Server error" } = err;
   res.status(status).json({ message });
 });
 
