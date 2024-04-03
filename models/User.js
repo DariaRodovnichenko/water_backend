@@ -29,11 +29,16 @@ const userSchema = new Schema(
       default: 2000,
       required: false,
     },
+    avatarURL: {
+      type: String,
+      default: "",
+    },
     gender: {
       type: String,
-      enum: ["male", "female"],
-      default: "male",
+      enum: ["male", "female", "undefined"],
+      default: "undefined",
     },
+
     token: {
       type: String,
       default: null
