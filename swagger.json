@@ -183,7 +183,7 @@
                 "description": "User's id",
                 "example": "66555d71857b1630586974a0"
               },
-              "username": {
+              "userName": {
                 "type": "string",
                 "description": "User's name",
                 "example": "user"
@@ -197,7 +197,7 @@
           },
           "example": {
             "id": "660ab0e3b7c42b904d9a5ed8",
-            "username": "email3",
+            "userName": "email3",
             "email": "email3@example.com"
           }
         },
