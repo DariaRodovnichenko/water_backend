@@ -9,7 +9,7 @@ const userSchema = new Schema(
     userName: {
       type: String,
       required: false,
-      default: null
+      default: null,
     },
     email: {
       type: String,
@@ -38,11 +38,15 @@ const userSchema = new Schema(
       enum: ["male", "female", "undefined"],
       default: "undefined",
     },
-
+    timezoneOffset: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
     token: {
       type: String,
-      default: null
-    }
+      default: null,
+    },
   },
   { versionKey: false, timestamps: true }
 );

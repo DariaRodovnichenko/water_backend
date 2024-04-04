@@ -10,7 +10,7 @@ import { HttpError } from "../helpers/index.js";
 
 const { JWT_SECRET } = process.env;
 
-const signup = async (req, res) => {
+const signup = async (req, res, timezoneOffset) => {
   const { email, password, username } = req.body;
   const user = await User.findOne({ email });
   if (user) {
