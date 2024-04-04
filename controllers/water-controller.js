@@ -1,6 +1,7 @@
 import Water from "../models/Water.js";
 import { HttpError } from "../helpers/index.js";
 import { ctrlWrapper } from "../decorators/index.js";
+import User from "../models/User.js";
 
 const getAllWater = async (req, res) => {
   const { _id: user } = req.user;
@@ -37,6 +38,7 @@ const addWater = async (req, res) => {
 
 const waterRate = async (req, res) => {
   const { _id } = req.user;
+
   const user = await User.findOneAndUpdate(_id, req.body);
   if (!user) {
     throw HttpError(404, `Not found`);
@@ -70,11 +72,14 @@ const updateWaterById = async (req, res) => {
 const getWaterByDate = async (req, res) => {
   const { _id: user, waterRate } = req.user;
 
+  const currentDate = new Date();
+
   const startDate = new Date(
     currentDate.getFullYear(),
     currentDate.getMonth(),
     currentDate.getDate()
   );
+
   const endDate = new Date(
     currentDate.getFullYear(),
     currentDate.getMonth(),
@@ -99,6 +104,7 @@ const getWaterByDate = async (req, res) => {
 
   res.json({ user: { id: user }, waterRecords, percentageWaterAmount });
 };
+
 const getWaterByMonth = async (req, res) => {
   const { _id: user, waterRate } = req.user;
   const { date } = req.query;

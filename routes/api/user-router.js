@@ -25,4 +25,5 @@ userRouter.patch(
   validateBody(updateUserWaterRateSchema),
   waterController.waterRate
 );
+
 export default userRouter;
