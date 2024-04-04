@@ -8,7 +8,6 @@ import { ctrlWrapper } from "../decorators/index.js";
 
 import { HttpError } from "../helpers/index.js";
 
-
 const { JWT_SECRET } = process.env;
 
 const signup = async (req, res) => {
@@ -21,15 +20,11 @@ const signup = async (req, res) => {
   const name = username ? username : email.split("@")[0];
   const hashPassword = await bcrypt.hash(password, 10);
 
-<<<<<<< Updated upstream
-  const newUser = await User.create({ userName: name, email, password: hashPassword });
-=======
   const newUser = await User.create({
     username: name,
     email,
     password: hashPassword,
   });
->>>>>>> Stashed changes
 
   res.status(201).json({
     id: newUser._id,
