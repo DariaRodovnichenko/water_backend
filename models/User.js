@@ -38,11 +38,6 @@ const userSchema = new Schema(
       enum: ["male", "female", "undefined"],
       default: "undefined",
     },
-    timezoneOffset: {
-      type: Number,
-      required: true,
-      default: 0,
-    },
     token: {
       type: String,
       default: null,

@@ -6,18 +6,30 @@ import { HttpError, cloudinary } from "../helpers/index.js";
 import { ctrlWrapper } from "../decorators/index.js";
 
 const getCurrent = (req, res) => {
-  const { email, avatarURL, gender, waterRate, userName } = req.user;
-  res.status(200).json({
+  const {
+    _id,
     email,
-    avatarURL,
     userName,
+    avatarURL,
     gender,
     waterRate,
+    createdAt,
+    updatedAt,
+  } = req.user;
+  res.status(200).json({
+    _id,
+    email,
+    userName,
+    avatarURL,
+    gender,
+    waterRate,
+    createdAt,
+    updatedAt,
   });
 };
 
 const updateUserInfo = async (req, res) => {
-  const { oldPassword, newPassword, timezoneOffset } = req.body;
+  const { oldPassword, newPassword } = req.body;
   if (oldPassword) {
     if (!newPassword) throw HttpError(400, "New password not found");
     if (oldPassword === newPassword)
@@ -42,10 +54,7 @@ const updateUserInfo = async (req, res) => {
   }
 
   const { _id } = req.user;
-  const user = await User.findByIdAndUpdate(_id, {
-    ...req.body,
-    timezoneOffset,
-  });
+  const user = await User.findByIdAndUpdate(_id, req.body);
   const { userName = "", gender, email } = user;
   res.status(200).json({
     email,
@@ -73,8 +82,20 @@ const updateAvatarUser = async (req, res) => {
   });
 };
 
+const waterRate = async (req, res) => {
+  const { _id } = req.user;
+  const user = await User.findOneAndUpdate(_id, req.body);
+  if (!user) {
+    throw HttpError(404, `File not found`);
+  }
+  res.json({
+    waterRate: user.waterRate,
+  });
+};
+
 export default {
   getCurrent: ctrlWrapper(getCurrent),
   updateAvatarUser: ctrlWrapper(updateAvatarUser),
   updateUserInfo: ctrlWrapper(updateUserInfo),
+  waterRate: ctrlWrapper(waterRate),
 };

@@ -20,10 +20,6 @@ const waterSchema = new Schema(
       ref: "user",
       required: true,
     },
-    timezoneOffset: {
-      type: Number,
-      required: false,
-    },
   },
   { versionKey: false, timestamps: true }
 );
@@ -32,16 +28,21 @@ waterSchema.post("save", handleSaveError);
 waterSchema.pre("findOneAndUpdate", preUpdate);
 waterSchema.post("findOneAndUpdate", handleSaveError);
 
+export const updateUserWaterRateSchema = Joi.object({
+  waterRate: Joi.number()
+    .max(15000)
+    .required()
+    .messages({ "any.required": `WaterRate field is missing` }),
+});
+
 export const waterAddSchema = Joi.object({
   date: Joi.date(),
   waterAmount: Joi.number().min(0).max(5000),
-  timezoneOffset: Joi.number().required(),
 });
 
 export const waterUpdateSchema = Joi.object({
   date: Joi.date(),
   waterAmount: Joi.number().min(0).max(5000),
-  timezoneOffset: Joi.number().required(),
 });
 
 const Water = model("waterRecord", waterSchema);
