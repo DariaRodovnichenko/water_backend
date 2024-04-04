@@ -6,7 +6,7 @@ import { HttpError, cloudinary } from "../helpers/index.js";
 import { ctrlWrapper } from "../decorators/index.js";
 
 const getCurrent = (req, res) => {
-    const { email, avatarURL = '', gender, waterRate, userName = '' } = req.user;
+    const { email, avatarURL, gender, waterRate, userName } = req.user;
     res.status(200).json({
         email,
         avatarURL,
