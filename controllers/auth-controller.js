@@ -18,10 +18,18 @@ const signup = async (req, res) => {
     throw HttpError(409, "Email already exist");
   }
 
-  const name = username ? username : email.split('@')[0]; 
+  const name = username ? username : email.split("@")[0];
   const hashPassword = await bcrypt.hash(password, 10);
 
+<<<<<<< Updated upstream
   const newUser = await User.create({ userName: name, email, password: hashPassword });
+=======
+  const newUser = await User.create({
+    username: name,
+    email,
+    password: hashPassword,
+  });
+>>>>>>> Stashed changes
 
   res.status(201).json({
     id: newUser._id,
@@ -64,11 +72,11 @@ const getCurrent = async (req, res) => {
 
 const signout = async (req, res) => {
   const { _id } = req.user;
-    await User.findByIdAndUpdate(_id, { token: "" });
-    
-    res.json({
-        message: "Signout success"
-    })
+  await User.findByIdAndUpdate(_id, { token: "" });
+
+  res.json({
+    message: "Signout success",
+  });
 };
 
 export default {
