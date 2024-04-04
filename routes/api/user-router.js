@@ -1,6 +1,9 @@
 import express from "express";
 import userController from "../../controllers/user-controller.js";
 import { isEmptyBody, authenticate, upload } from "../../middlewares/index.js";
+import validateBody from "../../decorators/validaterBody.js";
+import { updateUserWaterRateSchema } from "../../models/Water.js";
+import waterController from "../../controllers/water-controller.js";
 
 const userRouter = express.Router();
 
@@ -15,8 +18,6 @@ userRouter.patch(
   userController.updateAvatarUser
 );
 
-<<<<<<< Updated upstream
-=======
 userRouter.patch(
   "/waterrate",
   authenticate,
@@ -25,5 +26,4 @@ userRouter.patch(
   waterController.waterRate
 );
 
->>>>>>> Stashed changes
 export default userRouter;

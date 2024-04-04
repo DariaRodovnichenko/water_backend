@@ -10,7 +10,7 @@ import { HttpError } from "../helpers/index.js";
 
 const { JWT_SECRET } = process.env;
 
-const signup = async (req, res, timezoneOffset) => {
+const signup = async (req, res) => {
   const { email, password, username } = req.body;
   const user = await User.findOne({ email });
   if (user) {
@@ -56,14 +56,14 @@ const signin = async (req, res) => {
   });
 };
 
-const getCurrent = async (req, res) => {
-  const { _id, email } = req.user;
+// const getCurrent = async (req, res) => {
+//   const { _id, email } = req.user;
 
-  res.json({
-    id: _id,
-    email,
-  });
-};
+//   res.json({
+//     id: _id,
+//     email,
+//   });
+// };
 
 const signout = async (req, res) => {
   const { _id } = req.user;
@@ -78,5 +78,4 @@ export default {
   signup: ctrlWrapper(signup),
   signin: ctrlWrapper(signin),
   signout: ctrlWrapper(signout),
-  getCurrent: ctrlWrapper(getCurrent),
 };
