@@ -29,9 +29,9 @@ const getWaterById = async (req, res) => {
   res.json(result);
 };
 
-const addWater = async (req, res) => {
+const addWater = async (req, res, timezoneOffset) => {
   const { _id: user } = req.user;
-  const result = await Water.create({ ...req.body, user });
+  const result = await Water.create({ ...req.body, user, timezoneOffset });
   res.status(201).json(result);
 };
 
