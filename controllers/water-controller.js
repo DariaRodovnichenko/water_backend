@@ -24,7 +24,7 @@ const getWaterById = async (req, res) => {
   const { id } = req.params;
   const result = await Water.findOne({ _id: id, user });
   if (!result) {
-    throw HttpError(404, "Not found");
+    throw HttpError(404, "Water record not found");
   }
   res.json(result);
 };
@@ -40,7 +40,7 @@ const deleteWaterById = async (req, res) => {
   const { id } = req.params;
   const result = await Water.findOneAndDelete({ _id: id, user });
   if (!result) {
-    throw HttpError(404, `Not found`);
+    throw HttpError(404, `Water record not found`);
   }
   res.json({ message: "Delete successful" });
 };
@@ -50,7 +50,7 @@ const updateWaterById = async (req, res) => {
   const { id } = req.params;
   const result = await Water.findOneAndUpdate({ _id: id, user }, req.body);
   if (!result) {
-    throw HttpError(404, `Not found`);
+    throw HttpError(404, `Water record not found`);
   }
   res.json(result);
 };
