@@ -15,4 +15,15 @@ userRouter.patch(
   userController.updateAvatarUser
 );
 
+<<<<<<< Updated upstream
+=======
+userRouter.patch(
+  "/waterrate",
+  authenticate,
+  isEmptyBody,
+  validateBody(updateUserWaterRateSchema),
+  waterController.waterRate
+);
+
+>>>>>>> Stashed changes
 export default userRouter;
