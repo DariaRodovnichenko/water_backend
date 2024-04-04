@@ -92,8 +92,8 @@ const getWaterByMonth = async (req, res) => {
   const { date } = req.query;
   const [year, month] = date.split("-");
 
-  const startDate = new Date(year, month - 1, 1);
-  const endDate = new Date(year, month, 0, 23, 59, 59, 999);
+  const startDate = new Date(year, month - 2, 1);
+  const endDate = new Date(year, month, -1, 0, 23, 59, 59, 999);
 
   const filter = {
     user,
