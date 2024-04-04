@@ -69,21 +69,28 @@ const updateWaterById = async (req, res) => {
   res.json(result);
 };
 
+
 const getWaterByDate = async (req, res) => {
   const { _id: user, waterRate } = req.user;
+  const { date } = req.query; // Параметр з датою
 
-  const currentDate = new Date();
+  // Перевірка чи передано значення дати, якщо ні, використовується сьогоднішня дата
+  let selectedDate;
+  if (date) {
+    selectedDate = new Date(date);
+  } else {
+    selectedDate = new Date();
+  }
 
   const startDate = new Date(
-    currentDate.getFullYear(),
-    currentDate.getMonth(),
-    currentDate.getDate()
+    selectedDate.getFullYear(),
+    selectedDate.getMonth(),
+    selectedDate.getDate()
   );
-
   const endDate = new Date(
-    currentDate.getFullYear(),
-    currentDate.getMonth(),
-    currentDate.getDate(),
+    selectedDate.getFullYear(),
+    selectedDate.getMonth(),
+    selectedDate.getDate(),
     23,
     59,
     59,
@@ -104,6 +111,47 @@ const getWaterByDate = async (req, res) => {
 
   res.json({ user: { id: user }, waterRecords, percentageWaterAmount });
 };
+
+
+
+
+// const getWaterByDate = async (req, res) => {
+//   const { _id: user, waterRate } = req.user;
+
+//   const currentDate = new Date();
+
+//   const startDate = new Date(
+//     currentDate.getFullYear(),
+//     currentDate.getMonth(),
+//     currentDate.getDate()
+//   );
+
+//   const endDate = new Date(
+//     currentDate.getFullYear(),
+//     currentDate.getMonth(),
+//     currentDate.getDate(),
+//     23,
+//     59,
+//     59,
+//     999
+//   );
+
+//   const filter = {
+//     user,
+//     date: { $gte: startDate, $lte: endDate },
+//   };
+
+//   const waterRecords = await Water.find(filter, "date waterAmount");
+//   const allWaterAmount = waterRecords.reduce(
+//     (acc, item) => acc + item.waterAmount,
+//     0
+//   );
+//   const percentageWaterAmount = Math.round((allWaterAmount / waterRate) * 100);
+
+//   res.json({ user: { id: user }, waterRecords, percentageWaterAmount });
+// };
+
+
 
 const getWaterByMonth = async (req, res) => {
   const { _id: user, waterRate } = req.user;
