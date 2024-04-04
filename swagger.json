@@ -15,16 +15,25 @@
       { "url": "https://water-backend-4k0b.onrender.com" },
       { "url": "http://localhost:3000" }
     ],
+
+
+
+
     "tags": [
       {
         "name": "Auth",
         "description": "Authorization endpoints"
       },
       {
+      "name": "User",
+      "description": "User profile endpoints"
+      },
+      {
         "name": "Water",
         "description": "Water comsumption endpoints"
       }
     ],
+
 
 
     "paths": {
@@ -66,6 +75,7 @@
           }
         }
       },
+
       "/api/auth/signin": {
         "post": {
           "tags": ["Auth"],
@@ -104,34 +114,7 @@
           }
         }
       },
-      "/api/auth/current": {
-        "get": {
-          "tags": ["Auth"],
-          "summary": "Get current user",
-          "parameters": [],
-          "security": [{ "Bearer": [] }],
-          "responses": {
-            "200": {
-              "description": "Successful operation",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/AuthCurrentResponse"
-                  }
-                }
-              }
-            },
-            "400": {
-              "description": "Bad request (Authorization header not found)",
-              "content": {}
-            },
-            "401": {
-              "description": "invalid token",
-              "content": {}
-            }
-          }
-        }
-      },
+
       "/api/auth/signout": {
         "post": {
           "tags": ["Auth"],
@@ -153,8 +136,85 @@
             }
           }
         }
+      },
+
+
+
+
+      "/api/users/avatars": {
+      "patch": {
+        "tags": ["User"],
+        "summary": "Change user's avatar",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Upload file new user's avatar",
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/UserChangeAvatarRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Avatar's URL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserChangeAvatarResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "File not found or File extention not *.jpeg/*.jpg",
+            "content": {}
+          },
+          "401": {
+            "description": "Not authorized",
+            "content": {}
+          }
+        }
       }
     },
+
+      "/api/users/current": {
+        "get": {
+          "tags": ["User"],
+          "summary": "Get current user",
+          "parameters": [],
+          "security": [{ "Bearer": [] }],
+
+          "responses": {
+            "200": {
+              "description": "Successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UserCurrentResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request (Authorization header not found)",
+              "content": {}
+            },
+            "401": {
+              "description": "invalid token",
+              "content": {}
+            }
+          }
+        }
+      }
+    },
+
+
+
+
     "components": {
       "schemas": {
         "RegistrationRequest": {
@@ -201,7 +261,7 @@
             "email": "email3@example.com"
           }
         },
-        "AuthCurrentResponse": {
+        "UserCurrentResponse": {
           "type": "object",
           "properties": {
             "id": {
