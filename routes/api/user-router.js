@@ -1,5 +1,5 @@
 import express from 'express';
-import userController from "../../controllers/userController.js";
+import userController from "../../controllers/user-controller.js";
 import { isEmptyBody, authenticate, upload } from '../../middlewares/index.js';
 
 const userRouter = express.Router();

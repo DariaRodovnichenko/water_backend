@@ -57,7 +57,13 @@ const updateWaterById = async (req, res) => {
 
 const getWaterByDate = async (req, res) => {
   const { _id: user, waterRate } = req.user;
+  const { timezoneOffset } = req.query;
+
   const currentDate = new Date();
+  currentDate.setMinutes(
+    currentDate.getMinutes() + parseInt(timezoneOffset || "0", 10)
+  );
+
   const startDate = new Date(
     currentDate.getFullYear(),
     currentDate.getMonth(),
@@ -89,11 +95,18 @@ const getWaterByDate = async (req, res) => {
 };
 const getWaterByMonth = async (req, res) => {
   const { _id: user, waterRate } = req.user;
-  const { date } = req.query;
+  const { date, timezoneOffset } = req.query;
   const [year, month] = date.split("-");
 
   const startDate = new Date(year, month - 2, 1);
   const endDate = new Date(year, month, -1, 0, 23, 59, 59, 999);
+
+  startDate.setMinutes(
+    startDate.getMinutes() + parseInt(timezoneOffset || "0", 10)
+  );
+  endDate.setMinutes(
+    endDate.getMinutes() + parseInt(timezoneOffset || "0", 10)
+  );
 
   const filter = {
     user,
