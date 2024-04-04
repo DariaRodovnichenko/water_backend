@@ -29,10 +29,22 @@ const getWaterById = async (req, res) => {
   res.json(result);
 };
 
-const addWater = async (req, res, timezoneOffset) => {
+const addWater = async (req, res) => {
   const { _id: user } = req.user;
-  const result = await Water.create({ ...req.body, user, timezoneOffset });
+  const result = await Water.create({ ...req.body, user });
   res.status(201).json(result);
+};
+
+const waterRate = async (req, res) => {
+  const { _id } = req.user;
+  const user = await User.findOneAndUpdate(_id, req.body);
+  if (!user) {
+    throw HttpError(404, `Not found`);
+  }
+
+  res.json({
+    waterRate: user.waterRate,
+  });
 };
 
 const deleteWaterById = async (req, res) => {
@@ -57,12 +69,6 @@ const updateWaterById = async (req, res) => {
 
 const getWaterByDate = async (req, res) => {
   const { _id: user, waterRate } = req.user;
-  const { timezoneOffset } = req.query;
-
-  const currentDate = new Date();
-  currentDate.setMinutes(
-    currentDate.getMinutes() + parseInt(timezoneOffset || "0", 10)
-  );
 
   const startDate = new Date(
     currentDate.getFullYear(),
@@ -95,18 +101,11 @@ const getWaterByDate = async (req, res) => {
 };
 const getWaterByMonth = async (req, res) => {
   const { _id: user, waterRate } = req.user;
-  const { date, timezoneOffset } = req.query;
+  const { date } = req.query;
   const [year, month] = date.split("-");
 
   const startDate = new Date(year, month - 2, 1);
   const endDate = new Date(year, month, -1, 0, 23, 59, 59, 999);
-
-  startDate.setMinutes(
-    startDate.getMinutes() + parseInt(timezoneOffset || "0", 10)
-  );
-  endDate.setMinutes(
-    endDate.getMinutes() + parseInt(timezoneOffset || "0", 10)
-  );
 
   const filter = {
     user,
@@ -149,6 +148,7 @@ const getWaterByMonth = async (req, res) => {
 export default {
   getAllWater: ctrlWrapper(getAllWater),
   getWaterById: ctrlWrapper(getWaterById),
+  waterRate: ctrlWrapper(waterRate),
   addWater: ctrlWrapper(addWater),
   deleteWaterById: ctrlWrapper(deleteWaterById),
   updateWaterById: ctrlWrapper(updateWaterById),
