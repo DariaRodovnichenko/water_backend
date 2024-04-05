@@ -274,6 +274,17 @@
             }
           }
         },
+        "UserChangeAvatarRequest": {
+          "type": "object",
+          "required": ["avatar"],
+          "properties": {
+            "avatar": {
+              "type": "string",
+              "description": "File of avatar",
+              "format": "binary"
+            }
+          }
+        },
         "RegistrationResponse": {
           "type": "array",
           "items": {
