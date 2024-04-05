@@ -69,51 +69,88 @@ const updateWaterById = async (req, res) => {
   res.json(result);
 };
 
-
 const getWaterByDate = async (req, res) => {
   const { _id: user, waterRate } = req.user;
-  const { date } = req.query; // Параметр з датою
+  const { date } = req.query; // Date parameter in format YYYY-MM-DD
 
-  // Перевірка чи передано значення дати, якщо ні, використовується сьогоднішня дата
-  let selectedDate;
-  if (date) {
-    selectedDate = new Date(date);
-  } else {
-    selectedDate = new Date();
-  }
+  const selectedDate = new Date(date);
 
-  const startDate = new Date(
-    selectedDate.getFullYear(),
-    selectedDate.getMonth(),
-    selectedDate.getDate()
-  );
-  const endDate = new Date(
-    selectedDate.getFullYear(),
-    selectedDate.getMonth(),
-    selectedDate.getDate(),
-    23,
-    59,
-    59,
-    999
-  );
+  const startDate = new Date(selectedDate);
+  startDate.setHours(0, 0, 0, 0);
+
+  const endDate = new Date(selectedDate);
+  endDate.setHours(23, 59, 59, 999);
 
   const filter = {
     user,
     date: { $gte: startDate, $lte: endDate },
   };
 
-  const waterRecords = await Water.find(filter, "date waterAmount");
-  const allWaterAmount = waterRecords.reduce(
-    (acc, item) => acc + item.waterAmount,
-    0
-  );
-  const percentageWaterAmount = Math.round((allWaterAmount / waterRate) * 100);
+  try {
+    const waterRecords = await Water.find(filter, "date waterAmount");
 
-  res.json({ user: { id: user }, waterRecords, percentageWaterAmount });
+    const totalWaterAmount = waterRecords.reduce(
+      (acc, item) => acc + item.waterAmount,
+      0
+    );
+
+    const percentageWaterAmount = Math.round(
+      (totalWaterAmount / waterRate) * 100
+    );
+
+    res.json({
+      user: { id: user },
+      waterRecords,
+      totalWaterAmount,
+      percentageWaterAmount,
+    });
+  } catch (error) {
+    console.error("Error fetching water records:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
 };
 
+// const getWaterByDate = async (req, res) => {
+//   const { _id: user, waterRate } = req.user;
+//   const { date } = req.query; // Параметр з датою
 
+//   // Перевірка чи передано значення дати, якщо ні, використовується сьогоднішня дата
+//   let selectedDate;
+//   if (date) {
+//     selectedDate = new Date(date);
+//   } else {
+//     selectedDate = new Date();
+//   }
 
+//   const startDate = new Date(
+//     selectedDate.getFullYear(),
+//     selectedDate.getMonth(),
+//     selectedDate.getDate()
+//   );
+//   const endDate = new Date(
+//     selectedDate.getFullYear(),
+//     selectedDate.getMonth(),
+//     selectedDate.getDate(),
+//     23,
+//     59,
+//     59,
+//     999
+//   );
+
+//   const filter = {
+//     user,
+//     date: { $gte: startDate, $lte: endDate },
+//   };
+
+//   const waterRecords = await Water.find(filter, "date waterAmount");
+//   const allWaterAmount = waterRecords.reduce(
+//     (acc, item) => acc + item.waterAmount,
+//     0
+//   );
+//   const percentageWaterAmount = Math.round((allWaterAmount / waterRate) * 100);
+
+//   res.json({ user: { id: user }, waterRecords, percentageWaterAmount });
+// };
 
 // const getWaterByDate = async (req, res) => {
 //   const { _id: user, waterRate } = req.user;
@@ -150,8 +187,6 @@ const getWaterByDate = async (req, res) => {
 
 //   res.json({ user: { id: user }, waterRecords, percentageWaterAmount });
 // };
-
-
 
 const getWaterByMonth = async (req, res) => {
   const { _id: user, waterRate } = req.user;
