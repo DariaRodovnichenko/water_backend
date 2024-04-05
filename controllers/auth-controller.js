@@ -16,12 +16,14 @@ const signup = async (req, res) => {
   if (user) {
     throw HttpError(409, "Email already exist");
   }
+  
 
   const name = userName ? userName : email.split("@")[0];
+  console.log("userName is", name);
   const hashPassword = await bcrypt.hash(password, 10);
 
   const newUser = await User.create({
-    username: name,
+    userName: name,
     email,
     password: hashPassword,
   });
