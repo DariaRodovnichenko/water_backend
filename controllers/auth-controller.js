@@ -11,13 +11,13 @@ import { HttpError } from "../helpers/index.js";
 const { JWT_SECRET } = process.env;
 
 const signup = async (req, res) => {
-  const { email, password, username } = req.body;
+  const { email, password, userName } = req.body;
   const user = await User.findOne({ email });
   if (user) {
     throw HttpError(409, "Email already exist");
   }
 
-  const name = username ? username : email.split("@")[0];
+  const name = userName ? userName : email.split("@")[0];
   const hashPassword = await bcrypt.hash(password, 10);
 
   const newUser = await User.create({
