@@ -31,7 +31,7 @@ const userSchema = new Schema(
     },
     avatarURL: {
       type: String,
-      default: "",
+      default: "https://res.cloudinary.com/dtqwu2s5z/image/upload/v1712402357/water-tracker/avatars/sample.jpg",
     },
     gender: {
       type: String,
