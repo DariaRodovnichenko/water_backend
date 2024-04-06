@@ -379,6 +379,48 @@
             }
           }
         },
+        "UserChangeInfoRequest": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string",
+              "description": "User's email",
+              "format": "email"
+            },
+            "userName": {
+              "type": "string",
+              "description": "User's name",
+              "example": "Angelina Jolyd"
+            },
+            "gender": {
+              "type": "string",
+              "description": "User's gender",
+              "example": "female",
+              "enum": ["male", "female"]
+            }
+          }
+        },
+        "UserChangeInfoResponse": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string",
+              "description": "User's email",
+              "format": "email"
+            },
+            "userName": {
+              "type": "string",
+              "description": "User's name",
+              "example": "David"
+            },
+            "gender": {
+              "type": "string",
+              "description": "User's gender",
+              "example": "male",
+              "enum": ["male", "female"]
+            }
+          }
+        },
         "UserChangeAvatarRequest": {
           "type": "object",
           "required": ["avatar"],
@@ -387,6 +429,37 @@
               "type": "string",
               "description": "File of avatar",
               "format": "binary"
+            }
+          }
+        },
+        "UserChangeAvatarResponse": {
+          "type": "object",
+          "properties": {
+            "avatarURL": {
+              "type": "string",
+              "description": "Avatar's URL",
+              "example": "https://res.cloudinary.com/dtqwu2s5z/image/upload/v1712402357/water-tracker/avatars/sample.jpg"
+            }
+          }
+        },
+        "WaterRateRequest": {
+          "type": "object",
+          "required": ["waterRate"],
+          "properties": {
+            "waterRate": {
+              "type": "integer",
+              "description": "User's water rate",
+              "example": 1500
+            }
+          }
+        },
+        "WaterRateResponse": {
+          "type": "object",
+          "properties": {
+            "waterRate": {
+              "type": "integer",
+              "description": "User's water rate",
+              "example": 1500
             }
           }
         }
