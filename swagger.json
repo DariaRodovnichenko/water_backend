@@ -118,9 +118,9 @@
       "/api/auth/signout": {
         "post": {
           "tags": ["Auth"],
+          "security": [{ "Bearer": [] }],
           "summary": "Sign out current user",
           "parameters": [],
-          "security": [{ "Bearer": [] }],
           "responses": {
             "200": {
               "description": "Signout success",
@@ -137,56 +137,53 @@
           }
         }
       },
+      "/api/users": {
+        "patch": {
+          "tags": ["User"],
+          "security": [{ "Bearer": [] }],
+          "summary": "Update user profile",
+          "parameters": [],
 
-
-
-
-      "/api/users/avatars": {
-      "patch": {
-        "tags": ["User"],
-        "summary": "Change user's avatar",
-        "parameters": [],
-        "security": [{ "Bearer": [] }],
-        "requestBody": {
-          "description": "Upload file new user's avatar",
-          "required": true,
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "$ref": "#/components/schemas/UserChangeAvatarRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Avatar's URL",
+          "requestBody": {
+            "description": "Update user",
+            "required": true,
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserChangeAvatarResponse"
+                  "$ref": "#/components/schemas/UserChangeInfoRequest"
                 }
               }
             }
           },
-          "400": {
-            "description": "File not found or File extention not *.jpeg/*.jpg",
-            "content": {}
-          },
-          "401": {
-            "description": "Not authorized",
-            "content": {}
+
+          "responses": {
+            "200": {
+              "description": "Update user returned",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UserChangeInfoResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Validation error",
+              "content": {}
+            },
+            "401": {
+              "description": "Not authorized, wrong old password",
+              "content": {}
+            }
           }
         }
-      }
-    },
-
+      },
       "/api/users/current": {
         "get": {
           "tags": ["User"],
+          "security": [{ "Bearer": [] }],
           "summary": "Get current user",
           "parameters": [],
-          "security": [{ "Bearer": [] }],
 
           "responses": {
             "200": {
@@ -210,50 +207,85 @@
           }
         }
       },
-      "/api/users/": {
+      "/api/users/avatars": {
         "patch": {
           "tags": ["User"],
-          "summary": "Update user profile",
-          "parameters": [],
           "security": [{ "Bearer": [] }],
-          
+          "summary": "Change user's avatar",
+          "parameters": [],
           "requestBody": {
-            "description": "Update user",
+            "description": "Upload file new user's avatar",
             "required": true,
             "content": {
-              "application/json": {
+              "multipart/form-data": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserChangeInfoRequest"
+                  "$ref": "#/components/schemas/UserChangeAvatarRequest"
                 }
               }
             }
           },
-          
           "responses": {
             "200": {
-              "description": "Update user returned",
+              "description": "Avatar's URL",
               "content": {
                 "application/json": {
                   "schema": {
-                    "$ref": "#/components/schemas/UserChangeInfoResponse"
+                    "$ref": "#/components/schemas/UserChangeAvatarResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "File not found or File extention not *.jpeg/*.jpg",
+              "content": {}
+            },
+            "401": {
+              "description": "Not authorized",
+              "content": {}
+            }
+          }
+        }
+      },
+      "/api/users/waterrate": {
+        "patch": {
+          "tags": ["User"],
+          "security": [{ "Bearer": [] }],
+          "summary": "Change user's water rate",
+          "parameters": [],
+          "requestBody": {
+            "description": "New water rate",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaterRateRequest"
                 }
               }
             }
-          },          
+          },
+          "responses": {
+            "200": {
+              "description": "New water rate value",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/WaterRateResponse"
+                  }
+                }
+              }
+            },
             "400": {
               "description": "Validation error",
               "content": {}
             },
             "401": {
-              "description": "Not authorized, wrong old password",
+              "description": "Not authorized",
               "content": {}
             }
           }
         }
       }
     },
-    
-
 
 
     "components": {
@@ -271,17 +303,6 @@
               "type": "string",
               "description": "User's password",
               "example": "qwerty123"
-            }
-          }
-        },
-        "UserChangeAvatarRequest": {
-          "type": "object",
-          "required": ["avatar"],
-          "properties": {
-            "avatar": {
-              "type": "string",
-              "description": "File of avatar",
-              "format": "binary"
             }
           }
         },
@@ -313,21 +334,6 @@
             "email": "email3@example.com"
           }
         },
-        "UserCurrentResponse": {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "string",
-              "description": "User's id",
-              "example": "66555d71857b1630586974a0"
-            },
-            "email": {
-              "type": "string",
-              "description": "User's email",
-              "format": "email"
-            }
-          }
-        },
         "SignInRequest": {
           "type": "object",
           "required": ["email", "password"],
@@ -354,12 +360,38 @@
               "format": "token"
             }
           },
-          "example":
-          {
+          "example": {
             "token": "eyJhbGciOiJIUzI1NiIsInRpXVCasdfasDcxODU3YjE2MzA1ODY5NzRhMCIsImlhdCI6MTcxMTkwODAzMCwiZXhwIjoxNzExOTkwODMwfQ.gpjD2TtfIoVgVN9j4rerT73LN1XaOeHR6MAtWyXULQs"
+          }
+        },
+        "UserCurrentResponse": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "User's id",
+              "example": "66555d71857b1630586974a0"
+            },
+            "email": {
+              "type": "string",
+              "description": "User's email",
+              "format": "email"
+            }
+          }
+        },
+        "UserChangeAvatarRequest": {
+          "type": "object",
+          "required": ["avatar"],
+          "properties": {
+            "avatar": {
+              "type": "string",
+              "description": "File of avatar",
+              "format": "binary"
+            }
           }
         }
       },
+
       "securitySchemes": {
         "Bearer": {
           "type": "http",
