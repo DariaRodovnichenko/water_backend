@@ -1,7 +1,7 @@
 {
     "openapi": "3.0.1",
     "info": {
-      "version": "2.1.5",
+      "version": "2.2.0",
       "title": "Swagger Water API documentation",
       "description": "Showing off swagger-ui-express",
       "license": {
@@ -15,9 +15,6 @@
       { "url": "https://water-backend-4k0b.onrender.com" },
       { "url": "http://localhost:3000" }
     ],
-
-
-
 
     "tags": [
       {
@@ -33,8 +30,6 @@
         "description": "Water comsumption endpoints"
       }
     ],
-
-
 
     "paths": {
       "/api/auth/signup": {
@@ -399,7 +394,7 @@
             "userName": {
               "type": "string",
               "description": "User's name",
-              "example": "Angelina Jolyd"
+              "example": "Angelina Joly"
             },
             "gender": {
               "type": "string",

@@ -71,7 +71,7 @@ const updateWaterById = async (req, res) => {
 
 const getWaterByDate = async (req, res) => {
   const { _id: user, waterRate } = req.user;
-  const { date } = req.query; // Date parameter in format YYYY-MM-DD
+  const { date = new Date() } = req.query; // Date parameter in format YYYY-MM-DD
 
   const selectedDate = new Date(date);
 
