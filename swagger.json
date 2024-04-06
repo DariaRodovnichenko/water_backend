@@ -369,15 +369,24 @@
           "properties": {
             "id": {
               "type": "string",
-              "description": "User's id",
-              "example": "66555d71857b1630586974a0"
+              "description": "User's id"
             },
             "email": {
               "type": "string",
               "description": "User's email",
               "format": "email"
             }
-          }
+          },
+          "example": {
+            "_id": "66774eff20447605c9d7b85f",
+            "email": "email1@example.com",
+            "userName": "email1",
+            "avatarURL": "https://res.cloudinary.com/dtqwu2s5z/image/upload/v1712402357/water-tracker/avatars/sample.jpg",
+            "gender": "undefined",
+            "waterRate": 2222,
+            "createdAt": "2024-04-06T13:32:47.207Z",
+            "updatedAt": "2024-04-06T14:04:06.459Z"
+          }           
         },
         "UserChangeInfoRequest": {
           "type": "object",
