@@ -82,20 +82,9 @@ const updateAvatarUser = async (req, res) => {
   });
 };
 
-const waterRate = async (req, res) => {
-  const { _id } = req.user;
-  const user = await User.findOneAndUpdate(_id, req.body);
-  if (!user) {
-    throw HttpError(404, `File not found`);
-  }
-  res.json({
-    waterRate: user.waterRate,
-  });
-};
 
 export default {
   getCurrent: ctrlWrapper(getCurrent),
   updateAvatarUser: ctrlWrapper(updateAvatarUser),
   updateUserInfo: ctrlWrapper(updateUserInfo),
-  waterRate: ctrlWrapper(waterRate),
 };
