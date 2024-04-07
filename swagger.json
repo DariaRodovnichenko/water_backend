@@ -279,6 +279,35 @@
             }
           }
         }
+      },
+      "/api/water": {
+        "get": {
+          "tags": ["Water"],
+          "security": [{ "Bearer": [] }],
+          "summary": "Get current user's total water info",
+          "parameters": [],
+
+          "responses": {
+            "200": {
+              "description": "Successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UserWaterResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request (Authorization header not found)",
+              "content": {}
+            },
+            "401": {
+              "description": "invalid token",
+              "content": {}
+            }
+          }
+        }
       }
     },
 
@@ -381,7 +410,7 @@
             "waterRate": 2222,
             "createdAt": "2024-04-06T13:32:47.207Z",
             "updatedAt": "2024-04-06T14:04:06.459Z"
-          }           
+          }
         },
         "UserChangeInfoRequest": {
           "type": "object",
@@ -465,6 +494,88 @@
               "description": "User's water rate",
               "example": 1500
             }
+          }
+        },
+        "UserWaterResponse": {
+          "type": "object",
+          "properties": {
+            "result": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "_id": {
+                    "type": "string",
+                    "description": "Unique identifier for the water entry"
+                  },
+                  "date": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Date and time of the water entry"
+                  },
+                  "waterAmount": {
+                    "type": "integer",
+                    "description": "Amount of water consumed in milliliters"
+                  },
+                  "user": {
+                    "type": "object",
+                    "properties": {
+                      "waterRate": {
+                        "type": "integer",
+                        "description": "User's recommended daily water intake in milliliters"
+                      },
+                      "gender": {
+                        "type": "string",
+                        "description": "User's gender"
+                      },
+                      "_id": {
+                        "type": "string",
+                        "description": "User's unique identifier"
+                      },
+                      "email": {
+                        "type": "string",
+                        "description": "User's email address",
+                        "format": "email"
+                      }
+                    },
+                    "description": "Details about the user associated with the water entry"
+                  }
+                },
+                "description": "A water entry record"
+              },
+              "description": "List of water entry records"
+            },
+            "total": {
+              "type": "integer",
+              "description": "Total number of water entry records"
+            }
+          },
+          "example": {
+            "result": [
+              {
+                "_id": "660d11627dddbd63e086b51c",
+                "date": "2024-04-03T08:01:23.000Z",
+                "waterAmount": 300,
+                "user": {
+                  "waterRate": 2000,
+                  "gender": "male",
+                  "_id": "660b3984913cb66124b994c2",
+                  "email": "email1@gmail.com"
+                }
+              },
+              {
+                "_id": "660d12147dddbd63e086b51f",
+                "date": "2024-04-03T08:01:23.000Z",
+                "waterAmount": 253,
+                "user": {
+                  "waterRate": 2000,
+                  "gender": "male",
+                  "_id": "660b3984913cb66124b994c2",
+                  "email": "email1@gmail.com"
+                }
+              }
+            ],
+            "total": 2
           }
         }
       },
