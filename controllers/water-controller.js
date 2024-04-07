@@ -180,8 +180,8 @@ const getWaterByMonth = async (req, res) => {
     return {
       date,
       reqStart: start,
-      realStartDate: startDate,
       reqEnd: end,
+      realStartDate: startDate,
       realEndtDate: endDate,
       dayOfMonth,
       waterRate,
