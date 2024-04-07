@@ -309,6 +309,58 @@
           }
         }
       },
+      "/api/water/add": {
+        "post": {
+          "tags": ["Water"],
+          "security": [{ "Bearer": [] }],
+          "summary": "Creates current user's water document",
+          "parameters": [],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "waterAmount": {
+                      "type": "integer",
+                      "description": "Amount of water consumed in milliliters",
+                      "example": 3000
+                    },
+                    "date": {
+                      "type": "string",
+                      "format": "date",
+                      "description": "Date in the format YYYY-MM-DD when the water was consumed",
+                      "example": "2024-03-22"
+                    }
+                  },
+                  "required": ["waterAmount", "date"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UserWaterPostResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request (Authorization header not found)",
+              "content": {}
+            },
+            "401": {
+              "description": "Invalid token",
+              "content": {}
+            }
+          }
+        }
+      },
       "/api/water/today": {
         "get": {
           "tags": ["Water"],
@@ -809,6 +861,39 @@
             "description": "Water records for a specific period or a month"
           },
           "description": "Response containing water records for the specified month"
+        },
+        "UserWaterPostResponse": {
+          "type": "object",
+          "properties": {
+            "date": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Date and time when the water record was created"
+            },
+            "waterAmount": {
+              "type": "integer",
+              "description": "Amount of water consumed in milliliters"
+            },
+            "user": {
+              "type": "string",
+              "description": "User's ID"
+            },
+            "_id": {
+              "type": "string",
+              "description": "Unique identifier for the water record"
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Date and time when the water record was created"
+            },
+            "updatedAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Date and time when the water record was last updated"
+            }
+          },
+          "description": "Response containing the newly created water record"
         }
       },
       "securitySchemes": {

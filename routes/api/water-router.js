@@ -21,7 +21,7 @@ waterRouter.get("/month", waterController.getWaterByMonth);
 waterRouter.get("/:id", isValidId, waterController.getWaterById);
 
 waterRouter.post(
-  "/",
+  "/add",
   isEmptyBody,
   validateBody(waterAddSchema),
   waterController.addWater
