@@ -308,11 +308,50 @@
             }
           }
         }
+      },
+      "/api/water/today": {
+        "get": {
+          "tags": ["Water"],
+          "security": [{ "Bearer": [] }],
+          "summary": "Get current user's water amount per day",
+          "parameters": [
+            {
+              "name": "date",
+              "in": "query",
+              "description": "Date in the format YYYY-MM-DD if ommited returns current day",
+              "schema": {
+                "type": "string",
+                "format": "date"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UserWaterDayResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request (Authorization header not found)",
+              "content": {}
+            },
+            "401": {
+              "description": "invalid token",
+              "content": {}
+            }
+          }
+        }
       }
     },
 
 
     "components": {
+     
       "schemas": {
         "RegistrationRequest": {
           "type": "object",
@@ -577,9 +616,69 @@
             ],
             "total": 2
           }
+        },
+        "UserWaterDayResponse": {
+          "type": "object",
+          "properties": {
+            "startDate": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Start date and time of the requested water records period"
+            },
+            "endDate": {
+              "type": "string",
+              "format": "date-time",
+              "description": "End date and time of the requested water records period"
+            },
+            "user": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "User's id"
+                }
+              },
+              "description": "Information about the user"
+            },
+            "waterRecords": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "_id": {
+                    "type": "string",
+                    "description": "Unique identifier for the water entry"
+                  },
+                  "date": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Date and time of the water entry"
+                  },
+                  "waterAmount": {
+                    "type": "integer",
+                    "description": "Amount of water consumed in milliliters"
+                  }
+                },
+                "description": "A water entry record"
+              },
+              "description": "List of water entry records"
+            },
+            "totalWaterAmount": {
+              "type": "integer",
+              "description": "Total amount of water consumed for the specified date or current day"
+            },
+            "percentageWaterAmount": {
+              "type": "integer",
+              "description": "Percentage of the user's recommended daily water intake represented by the total water amount consumed"
+            }
+          },
+          "description": "Response containing water records for the specified date or current day"
         }
-      },
 
+
+
+
+      },
       "securitySchemes": {
         "Bearer": {
           "type": "http",
