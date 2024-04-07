@@ -112,11 +112,28 @@ const getWaterByDate = async (req, res) => {
 
 const getWaterByMonth = async (req, res) => {
   const { _id: user, waterRate } = req.user;
-  const { date } = req.query;
-  const [year, month] = date.split("-");
+  const { date, start, end } = req.query;
 
-  const startDate = new Date(year, month - 2, 1);
-  const endDate = new Date(year, month, -1, 0, 23, 59, 59, 999);
+  if (!(date || (start && end))) {
+    throw HttpError(404, `month or period not specified`);
+  }
+
+  let startDate
+  let endDate
+
+  if (date) {
+    const [year, month] = date.split("-");
+    startDate = new Date(Date.UTC(year, month - 1, 1));
+    endDate = new Date(Date.UTC(year, month, 0));
+    endDate.setUTCHours(23, 59, 59, 999);
+  }
+  if (start && end) {
+    const [startYear, startMonth, startDay] = start.split("-");
+    const [endYear, endMonth, endDay] = end.split("-");
+    startDate = new Date(Date.UTC(startYear, startMonth - 1, startDay));
+    endDate = new Date(Date.UTC(endYear, endMonth - 1, endDay, 23, 59, 59, 999));
+  }
+
 
   const filter = {
     user,
@@ -147,6 +164,10 @@ const getWaterByMonth = async (req, res) => {
     const percent = Math.round((sumWaterAmount / waterRate) * 100);
     return {
       date,
+      reqStart: start,
+      realStartDate: startDate,
+      reqEnd: end,
+      realEndtDate: endDate,
       dayOfMonth,
       waterRate,
       percent,
@@ -156,6 +177,58 @@ const getWaterByMonth = async (req, res) => {
 
   res.json(totalData);
 };
+
+
+// const getWaterByMonth = async (req, res) => {
+//   const { _id: user, waterRate } = req.user;
+//   const { date } = req.query;
+//   const [year, month] = date.split("-");
+
+//   const startDate = new Date(Date.UTC(year, month - 1, 1));
+//   const endDate = new Date(Date.UTC(year, month, 0));
+//   endDate.setUTCHours(23, 59, 59, 999);
+
+
+//   const filter = {
+//     user,
+//     date: { $gte: startDate, $lte: endDate },
+//   };
+
+//   const waterRecords = await Water.aggregate([
+//     { $match: filter },
+//     {
+//       $group: {
+//         _id: { $dayOfMonth: "$date" },
+//         sumWaterAmount: { $sum: "$waterAmount" },
+//         count: { $sum: 1 },
+//       },
+//     },
+//     {
+//       $project: {
+//         _id: 0,
+//         dayOfMonth: "$_id",
+//         sumWaterAmount: 1,
+//         count: 1,
+//       },
+//     },
+//   ]);
+
+//   const totalData = waterRecords.map((record) => {
+//     const { dayOfMonth, sumWaterAmount, count } = record;
+//     const percent = Math.round((sumWaterAmount / waterRate) * 100);
+//     return {
+//       date,
+//       realStartDate: startDate,
+//       realEndtDate: endDate,
+//       dayOfMonth,
+//       waterRate,
+//       percent,
+//       numberRecords: count,
+//     };
+//   });
+
+//   res.json(totalData);
+// };
 
 export default {
   getAllWater: ctrlWrapper(getAllWater),
