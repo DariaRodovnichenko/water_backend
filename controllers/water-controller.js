@@ -113,8 +113,12 @@ const getWaterByDate = async (req, res) => {
 };
 
 const getWaterByMonth = async (req, res) => {
+  const currenYeartMonth = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`
+   
+  console.log("currenYeartMonth:", currenYeartMonth);
+  
   const { _id: user, waterRate } = req.user;
-  const { date, start, end } = req.query;
+  const { date = currenYeartMonth, start, end } = req.query;
 
   if (!(date || (start && end))) {
     throw HttpError(404, `month or period not specified`);
@@ -178,7 +182,7 @@ const getWaterByMonth = async (req, res) => {
     const { dayOfMonth, sumWaterAmount, count } = record;
     const percent = Math.round((sumWaterAmount / waterRate) * 100);
     return {
-      date,
+      date: req.query.date,
       reqStart: start,
       reqEnd: end,
       realStartDate: startDate,
