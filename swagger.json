@@ -318,7 +318,7 @@
             {
               "name": "date",
               "in": "query",
-              "description": "Date in the format YYYY-MM-DD if ommited returns current day",
+              "description": "Date in the format YYYY-MM-DD if omitted returns current day",
               "schema": {
                 "type": "string",
                 "format": "date"
@@ -332,6 +332,62 @@
                 "application/json": {
                   "schema": {
                     "$ref": "#/components/schemas/UserWaterDayResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request (Authorization header not found)",
+              "content": {}
+            },
+            "401": {
+              "description": "invalid token",
+              "content": {}
+            }
+          }
+        }
+      },
+      "/api/water/month": {
+        "get": {
+          "tags": ["Water"],
+          "security": [{ "Bearer": [] }],
+          "summary": "Get current user's water amount per month or for requested period or for current month if any",
+          "parameters": [
+            {
+              "name": "date",
+              "in": "query",
+              "description": "Date in the format YYYY-MM if date or period omitted it returns current month",
+              "schema": {
+                "type": "string",
+                "format": "date"
+              }
+            },
+            {
+              "name": "start",
+              "in": "query",
+              "description": "Start Date of requested period in the format YYYY-MM-DD",
+              "schema": {
+                "type": "string",
+                "format": "date"
+              }
+            },
+            {
+              "name": "end",
+              "in": "query",
+              "description": "End Date of requested period in the format YYYY-MM-DD",
+              "schema": {
+                "type": "string",
+                "format": "date"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UserWaterMonthResponse"
                   }
                 }
               }
@@ -673,11 +729,55 @@
             }
           },
           "description": "Response containing water records for the specified date or current day"
+        },
+        "UserWaterMonthResponse": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "date": {
+                "type": "string",
+                "description": "Date in the format YYYY-MM from request"
+              },
+              "reqStart": {
+                "type": "string",
+                "description": "Start date of the requested water records period in the format YYYY-MM-DD"
+              },
+              "reqEnd": {
+                "type": "string",
+                "description": "End date of the requested water records period in the format YYYY-MM-DD"
+              },
+              "realStartDate": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Actual start date and time of the water records period from DB"
+              },
+              "realEndDate": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Actual end date and time of the water records period from DB"
+              },
+              "dayOfMonth": {
+                "type": "integer",
+                "description": "Day of the month for which the water records are provided"
+              },
+              "waterRate": {
+                "type": "integer",
+                "description": "User's water rate in milliliters per day"
+              },
+              "percent": {
+                "type": "integer",
+                "description": "Percentage of the user's recommended daily water intake represented by the total water amount consumed"
+              },
+              "numberRecords": {
+                "type": "integer",
+                "description": "Total number of water records for the specified period or a month"
+              }
+            },
+            "description": "Water records for a specific period or a month"
+          },
+          "description": "Response containing water records for the specified month"
         }
-
-
-
-
       },
       "securitySchemes": {
         "Bearer": {
