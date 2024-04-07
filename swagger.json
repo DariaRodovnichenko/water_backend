@@ -402,6 +402,38 @@
             }
           }
         }
+      },
+      "/api/water/{id}": {
+        "delete": {
+          "tags": ["Water"],
+          "security": [{ "Bearer": [] }],
+          "summary": "Delete user's water records",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Dynamic parameter ID of corresponding water record"
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Delete success",
+              "content": {}
+            },
+            "404": {
+              "description": "Water record not found",
+              "content": {}
+            },
+            "401": {
+              "description": "Not authorized",
+              "content": {}
+            }
+          }
+        }
       }
     },
 
