@@ -123,17 +123,30 @@ const getWaterByMonth = async (req, res) => {
   let startDate
   let endDate
 
+  // if (date) {
+  //   const [year, month] = date.split("-");
+  //   startDate = new Date(Date.UTC(year, month - 1, 1));
+  //   endDate = new Date(Date.UTC(year, month, 0));
+  //   endDate.setUTCHours(23, 59, 59, 999);
+  // }
+  // if (start && end) {
+  //   const [startYear, startMonth, startDay] = start.split("-");
+  //   const [endYear, endMonth, endDay] = end.split("-");
+  //   startDate = new Date(Date.UTC(startYear, startMonth - 1, startDay));
+  //   endDate = new Date(Date.UTC(endYear, endMonth - 1, endDay, 23, 59, 59, 999));
+  // }
+
   if (date) {
     const [year, month] = date.split("-");
-    startDate = new Date(Date.UTC(year, month - 1, 1));
-    endDate = new Date(Date.UTC(year, month, 0));
-    endDate.setUTCHours(23, 59, 59, 999);
+    startDate = new Date(year, month - 1, 1);
+    endDate = new Date(year, month, 0);
+    endDate.setHours(23, 59, 59, 999);
   }
   if (start && end) {
     const [startYear, startMonth, startDay] = start.split("-");
     const [endYear, endMonth, endDay] = end.split("-");
-    startDate = new Date(Date.UTC(startYear, startMonth - 1, startDay));
-    endDate = new Date(Date.UTC(endYear, endMonth - 1, endDay, 23, 59, 59, 999));
+    startDate = new Date(startYear, startMonth - 1, startDay);
+    endDate = new Date(endYear, endMonth - 1, endDay, 23, 59, 59, 999);
   }
 
 
