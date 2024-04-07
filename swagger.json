@@ -420,8 +420,8 @@
             }
           ],
           "responses": {
-            "201": {
-              "description": "Delete success",
+            "200": {
+              "description": "Successfully deleted",
               "content": {}
             },
             "404": {

@@ -56,7 +56,7 @@ const deleteWaterById = async (req, res) => {
   if (!result) {
     throw HttpError(404, `Water record not found`);
   }
-  res.json({ message: "Delete successful" });
+  res.json({ message: "Successfully deleted" });
 };
 
 const updateWaterById = async (req, res) => {
