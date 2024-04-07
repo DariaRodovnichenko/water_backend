@@ -146,6 +146,7 @@ const getWaterByMonth = async (req, res) => {
     const { dayOfMonth, sumWaterAmount, count } = record;
     const percent = Math.round((sumWaterAmount / waterRate) * 100);
     return {
+      date,
       dayOfMonth,
       waterRate,
       percent,
