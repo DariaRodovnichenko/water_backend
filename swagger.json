@@ -1,7 +1,7 @@
 {
     "openapi": "3.0.1",
     "info": {
-      "version": "2.2.0",
+      "version": "2.2.5",
       "title": "Swagger Water API documentation",
       "description": "Showing off swagger-ui-express",
       "license": {
@@ -74,7 +74,7 @@
       "/api/auth/signin": {
         "post": {
           "tags": ["Auth"],
-          "summary": "User sign in",
+          "summary": "User signin",
           "parameters": [],
           "requestBody": {
             "description": "Sign-in object",
