@@ -18,7 +18,7 @@ waterRouter.use(authenticate);
 waterRouter.get("/", waterController.getAllWater);
 waterRouter.get("/today", waterController.getWaterByDate);
 waterRouter.get("/month", waterController.getWaterByMonth);
-waterRouter.get("/:id", isValidId, waterController.getWaterById);
+waterRouter.get("/show/:id", isValidId, waterController.getWaterById);
 
 waterRouter.post(
   "/add",
@@ -28,13 +28,13 @@ waterRouter.post(
 );
 
 waterRouter.put(
-  "/:id",
+  "/update/:id",
   isValidId,
   isEmptyBody,
   validateBody(waterUpdateSchema),
   waterController.updateWaterById
 );
 
-waterRouter.delete("/:id", isValidId, waterController.deleteWaterById);
+waterRouter.delete("/remove/:id", isValidId, waterController.deleteWaterById);
 
 export default waterRouter;

@@ -361,6 +361,68 @@
           }
         }
       },
+      "/api/water/update/{id}": {
+        "put": {
+          "tags": ["Water"],
+          "security": [{ "Bearer": [] }],
+          "summary": "Update user's water record",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Dynamic parameter ID of corresponding water record"
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "waterAmount": {
+                      "type": "integer",
+                      "description": "Amount of water consumed in milliliters",
+                      "example": 3000
+                    },
+                    "date": {
+                      "type": "string",
+                      "format": "date",
+                      "description": "Date in the format YYYY-MM-DD when the water was consumed",
+                      "example": "2024-03-22"
+                    }
+                  },
+                  "required": ["waterAmount", "date"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UserWaterUpdateResponse"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Water record not found",
+              "content": {}
+            },
+            "401": {
+              "description": "Not authorized",
+              "content": {}
+            }
+          }
+        }
+      },
       "/api/water/today": {
         "get": {
           "tags": ["Water"],
@@ -455,7 +517,7 @@
           }
         }
       },
-      "/api/water/{id}": {
+      "/api/water/remove/{id}": {
         "delete": {
           "tags": ["Water"],
           "security": [{ "Bearer": [] }],
@@ -500,7 +562,8 @@
             "email": {
               "type": "string",
               "description": "User's email",
-              "format": "email"
+              "format": "email",
+              "example": "email10@example.com"
             },
             "password": {
               "type": "string",
@@ -527,14 +590,16 @@
               "email": {
                 "type": "string",
                 "description": "User's email",
-                "format": "email"
+                "format": "email",
+                "example": "email10@example.com"
+              },
+              "token": {
+                "type": "string",
+                "description": "User's login token",
+                "format": "token",
+                "example": "eyJhbGciOiJIUzI1NiIsInRpXVCasdfasDcxODU3YjE2MzA1ODY5NzRhMCIsImlhdCI6MTcxMTkwODAzMCwiZXhwIjoxNzExOTkwODMwfQ.gpjD2TtfIoVgVN9j4rerT73LN1XaOeHR6MAtWyXULQs"
               }
             }
-          },
-          "example": {
-            "id": "660ab0e3b7c42b904d9a5ed8",
-            "userName": "email3",
-            "email": "email3@example.com"
           }
         },
         "SignInRequest": {
@@ -545,7 +610,7 @@
               "type": "string",
               "description": "User's email",
               "format": "email",
-              "example": "email5@example.com"
+              "example": "email10@example.com"
             },
             "password": {
               "type": "string",
@@ -577,12 +642,13 @@
             "email": {
               "type": "string",
               "description": "User's email",
-              "format": "email"
+              "format": "email",
+              "example": "email10@example.com"
             }
           },
           "example": {
             "_id": "66774eff20447605c9d7b85f",
-            "email": "email1@example.com",
+            "email": "email10@example.com",
             "userName": "email1",
             "avatarURL": "https://res.cloudinary.com/dtqwu2s5z/image/upload/v1712402357/water-tracker/avatars/sample.jpg",
             "gender": "undefined",
@@ -597,7 +663,8 @@
             "email": {
               "type": "string",
               "description": "User's email",
-              "format": "email"
+              "format": "email",
+              "example": "email10@example.com"
             },
             "userName": {
               "type": "string",
@@ -618,7 +685,8 @@
             "email": {
               "type": "string",
               "description": "User's email",
-              "format": "email"
+              "format": "email",
+              "example": "email10@example.com"
             },
             "userName": {
               "type": "string",
@@ -714,7 +782,8 @@
                       "email": {
                         "type": "string",
                         "description": "User's email address",
-                        "format": "email"
+                        "format": "email",
+                        "example": "email10@example.com"
                       }
                     },
                     "description": "Details about the user associated with the water entry"
@@ -739,7 +808,7 @@
                   "waterRate": 2000,
                   "gender": "male",
                   "_id": "660b3984913cb66124b994c2",
-                  "email": "email1@gmail.com"
+                  "email": "email10@example.com"
                 }
               },
               {
@@ -750,7 +819,7 @@
                   "waterRate": 2000,
                   "gender": "male",
                   "_id": "660b3984913cb66124b994c2",
-                  "email": "email1@gmail.com"
+                  "email": "email10@example.com"
                 }
               }
             ],
@@ -894,6 +963,39 @@
             }
           },
           "description": "Response containing the newly created water record"
+        },
+        "UserWaterUpdateResponse": {
+          "type": "object",
+          "properties": {
+            "_id": {
+              "type": "string",
+              "description": "Unique identifier for the water record"
+            },
+            "date": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Date and time when the water record was created"
+            },
+            "waterAmount": {
+              "type": "integer",
+              "description": "Amount of water consumed in milliliters"
+            },
+            "user": {
+              "type": "string",
+              "description": "User's ID"
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Date and time when the water record was created"
+            },
+            "updatedAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Date and time when the water record was last updated"
+            }
+          },
+          "description": "Response updating the existing water record"
         }
       },
       "securitySchemes": {
