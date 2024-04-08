@@ -918,7 +918,7 @@
                 "type": "integer",
                 "description": "User's water rate in milliliters per day"
               },
-              "percentageWaterAmount": {
+              "percent": {
                 "type": "integer",
                 "description": "Percentage of the user's recommended daily water intake represented by the total water amount consumed"
               },

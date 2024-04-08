@@ -166,7 +166,7 @@ const getWaterByMonth = async (req, res) => {
 
   const totalData = waterRecords.map((record) => {
     const { dayOfMonth, sumWaterAmount, count } = record;
-    const percentageWaterAmount = Math.round((sumWaterAmount / waterRate) * 100);
+    const percent = Math.round((sumWaterAmount / waterRate) * 100);
     return {
       currenYeartMonth,
       date: req.query.date,
@@ -176,7 +176,7 @@ const getWaterByMonth = async (req, res) => {
       realEndtDate: endDate,
       dayOfMonth,
       waterRate,
-      percentageWaterAmount,
+      percent,
       numberRecords: count,
     };
   });
