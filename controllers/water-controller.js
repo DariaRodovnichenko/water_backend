@@ -71,9 +71,17 @@ const waterRate = async (req, res) => {
       { waterRate },
       { new: true }
     );
+
+    const currentDate = new Date().toISOString().split("T")[0];
+    await Water.updateMany(
+      { user: _id, date: currentDate },
+      { dailyWaterRate: waterRate }
+    );
+
     if (!user) {
       throw HttpError(404, "User not found");
     }
+
     res.json({ waterRate: user.waterRate });
   } catch (error) {
     console.error("Error updating user water rate:", error);
@@ -154,8 +162,17 @@ const getWaterByDate = async (req, res) => {
       0
     );
 
+    const selectedWaterRecord = waterRecords.find((record) => {
+      const recordDate = new Date(record.date);
+      return recordDate.toDateString() === selectedDate.toDateString();
+    });
+
+    if (!selectedWaterRecord) {
+      throw HttpError(404, "Water record not found for the selected date");
+    }
+
     const percentageWaterAmount = Math.round(
-      (totalWaterAmount / totalDailyWaterRate) * 100
+      (totalWaterAmount / selectedWaterRecord.dailyWaterRate) * 100
     );
 
     res.json({
@@ -173,34 +190,14 @@ const getWaterByDate = async (req, res) => {
 };
 
 const getWaterByMonth = async (req, res) => {
-  const currentYearMonth = `${new Date().getFullYear()}-${String(
-    new Date().getMonth() + 1
-  ).padStart(2, "0")}`;
-
-  console.log("currentYearMonth:", currentYearMonth);
-
   const { _id: user, waterRate } = req.user;
-  const { date = currentYearMonth, start, end } = req.query;
+  const { date = new Date(), start, end } = req.query; // Date parameter in format YYYY-MM
 
-  if (!(date || (start && end))) {
-    throw HttpError(404, `Month or period not specified`);
-  }
+  const startDate = start ? new Date(start) : new Date(date);
+  startDate.setHours(0, 0, 0, 0);
 
-  let startDate;
-  let endDate;
-
-  if (date) {
-    const [year, month] = date.split("-");
-    startDate = new Date(year, month - 1, 1);
-    endDate = new Date(year, month, 0);
-    endDate.setHours(23, 59, 59, 999);
-  }
-  if (start && end) {
-    const [startYear, startMonth, startDay] = start.split("-");
-    const [endYear, endMonth, endDay] = end.split("-");
-    startDate = new Date(startYear, startMonth - 1, startDay);
-    endDate = new Date(endYear, endMonth - 1, endDay, 23, 59, 59, 999);
-  }
+  const endDate = end ? new Date(end) : new Date(date);
+  endDate.setHours(23, 59, 59, 999);
 
   const filter = {
     user,
@@ -231,16 +228,24 @@ const getWaterByMonth = async (req, res) => {
 
     const totalData = waterRecords.map((record) => {
       const { dayOfMonth, sumWaterAmount, sumDailyWaterRate, count } = record;
-      const percent = Math.round((sumWaterAmount / sumDailyWaterRate) * 100);
+
+      const selectedWaterRecord = waterRecords.find(
+        (record) => record.dayOfMonth === dayOfMonth
+      );
+
+      if (!selectedWaterRecord) {
+        throw HttpError(404, `Water record not found for day ${dayOfMonth}`);
+      }
+
+      const percent = Math.round(
+        (sumWaterAmount / selectedWaterRecord.sumDailyWaterRate) * 100
+      );
       return {
-        currentYearMonth,
-        date: req.query.date,
-        reqStart: start,
-        reqEnd: end,
-        realStartDate: startDate,
-        realEndDate: endDate,
+        currentYearMonth: date.substring(0, 7),
+        startDate,
+        endDate,
         dayOfMonth,
-        waterRate,
+        waterRate: selectedWaterRecord.sumDailyWaterRate / count, // Calculate the average dailyWaterRate for the day
         percent,
         numberRecords: count,
       };
@@ -252,6 +257,98 @@ const getWaterByMonth = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+// const getWaterByMonth = async (req, res) => {
+//   const currentYearMonth = `${new Date().getFullYear()}-${String(
+//     new Date().getMonth() + 1
+//   ).padStart(2, "0")}`;
+
+//   console.log("currentYearMonth:", currentYearMonth);
+
+//   const { _id: user, waterRate } = req.user;
+//   const { date = currentYearMonth, start, end } = req.query;
+
+//   if (!(date || (start && end))) {
+//     throw HttpError(404, `Month or period not specified`);
+//   }
+
+//   let startDate;
+//   let endDate;
+
+//   if (date) {
+//     const [year, month] = date.split("-");
+//     startDate = new Date(year, month - 1, 1);
+//     endDate = new Date(year, month, 0);
+//     endDate.setHours(23, 59, 59, 999);
+//   }
+//   if (start && end) {
+//     const [startYear, startMonth, startDay] = start.split("-");
+//     const [endYear, endMonth, endDay] = end.split("-");
+//     startDate = new Date(startYear, startMonth - 1, startDay);
+//     endDate = new Date(endYear, endMonth - 1, endDay, 23, 59, 59, 999);
+//   }
+
+//   const filter = {
+//     user,
+//     date: { $gte: startDate, $lte: endDate },
+//   };
+
+//   try {
+//     const waterRecords = await Water.aggregate([
+//       { $match: filter },
+//       {
+//         $group: {
+//           _id: { $dayOfMonth: "$date" },
+//           sumWaterAmount: { $sum: "$waterAmount" },
+//           sumDailyWaterRate: { $sum: "$dailyWaterRate" },
+//           count: { $sum: 1 },
+//         },
+//       },
+//       {
+//         $project: {
+//           _id: 0,
+//           dayOfMonth: "$_id",
+//           sumWaterAmount: 1,
+//           sumDailyWaterRate: 1,
+//           count: 1,
+//         },
+//       },
+//     ]);
+
+//     const totalData = waterRecords.map((record) => {
+//       const { dayOfMonth, sumWaterAmount, sumDailyWaterRate, count } = record;
+
+//       const selectedWaterRecord = waterRecords.find(
+//         (record) => record.dayOfMonth === dayOfMonth
+//       );
+
+//       if (!selectedWaterRecord) {
+//         throw HttpError(404, `Water record not found for day ${dayOfMonth}`);
+//       }
+
+//       const percent = Math.round(
+//         (sumWaterAmount / selectedWaterRecord.sumDailyWaterRate) * 100
+//       );
+//       return {
+//         currentYearMonth,
+//         date: req.query.date,
+//         reqStart: start,
+//         reqEnd: end,
+//         realStartDate: startDate,
+//         realEndDate: endDate,
+//         dayOfMonth,
+//         waterRate,
+//         percent,
+//         numberRecords: count,
+//       };
+//     });
+
+//     res.json(totalData);
+//   } catch (error) {
+//     console.error("Error fetching water records by month:", error);
+//     res.status(500).json({ message: "Internal Server Error" });
+//   }
+// };
 
 export default {
   getAllWater: ctrlWrapper(getAllWater),
