@@ -19,7 +19,6 @@ const getCurrent = (req, res) => {
   res.status(200).json({
     _id,
     email,
-    password,
     userName,
     avatarURL,
     gender,
@@ -59,7 +58,6 @@ const updateUserInfo = async (req, res) => {
   const { userName = "", gender, email } = user;
   res.status(200).json({
     email,
-    password,
     userName,
     gender,
   });
