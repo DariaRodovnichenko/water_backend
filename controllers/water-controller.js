@@ -43,9 +43,10 @@ const waterRate = async (req, res) => {
   if (!user) {
     throw HttpError(404, `Not found`);
   }
-
+  let mlWaterRate = user.waterRate <= 15 ? 1000 * user.waterRate : user.waterRate;
+    
   res.json({
-    waterRate: user.waterRate,
+    waterRate: mlWaterRate,
   });
 };
 
