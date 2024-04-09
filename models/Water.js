@@ -15,6 +15,12 @@ const waterSchema = new Schema(
       default: 0,
       required: true,
     },
+    dailyWaterRate: {
+      type: Number,
+      min: 0,
+      max: 15000,
+      default: 0,
+    },
     user: {
       type: Schema.Types.ObjectId,
       ref: "user",
@@ -38,11 +44,13 @@ export const updateUserWaterRateSchema = Joi.object({
 export const waterAddSchema = Joi.object({
   date: Joi.date(),
   waterAmount: Joi.number().min(0).max(5000),
+  dailyWaterRate: Joi.number().min(0).max(15000),
 });
 
 export const waterUpdateSchema = Joi.object({
   date: Joi.date(),
   waterAmount: Joi.number().min(0).max(5000),
+  dailyWaterRate: Joi.number().min(0).max(15000),
 });
 
 const Water = model("waterRecord", waterSchema);
