@@ -32,7 +32,13 @@ const getWaterById = async (req, res) => {
 
 const addWater = async (req, res) => {
   const { _id: user } = req.user;
-  const result = await Water.create({ ...req.body, user });
+  const { waterAmount, date, dailyWaterRate } = req.body;
+  const result = await Water.create({
+    waterAmount,
+    date,
+    dailyWaterRate,
+    user,
+  });
   res.status(201).json(result);
 };
 
@@ -63,11 +69,15 @@ const deleteWaterById = async (req, res) => {
 const updateWaterById = async (req, res) => {
   const { _id: user } = req.user;
   const { id } = req.params;
-  const result = await Water.findOneAndUpdate({ _id: id, user }, req.body);
-  if (!result) {
-    throw HttpError(404, `Water record not found`);
-  }
-  res.json(result);
+   const { waterAmount, date, dailyWaterRate } = req.body;
+   const result = await Water.findOneAndUpdate(
+     { _id: id, user },
+     { waterAmount, date, dailyWaterRate }
+   );
+   if (!result) {
+     throw HttpError(404, `Water record not found`);
+   }
+   res.json(result);
 };
 
 const getWaterByDate = async (req, res) => {
@@ -114,12 +124,12 @@ const getWaterByDate = async (req, res) => {
 };
 
 const getWaterByMonth = async (req, res) => {
-  const currenYeartMonth = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`
+  const currentYearMonth = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`
    
-  console.log("currenYeartMonth:", currenYeartMonth);
+  console.log("currentYearMonth:", currentYearMonth);
   
   const { _id: user, waterRate } = req.user;
-  const { date = currenYeartMonth, start, end } = req.query;
+  const { date = currentYearMonth, start, end } = req.query;
 
   if (!(date || (start && end))) {
     throw HttpError(404, `month or period not specified`);
@@ -169,12 +179,12 @@ const getWaterByMonth = async (req, res) => {
     const { dayOfMonth, sumWaterAmount, count } = record;
     const percent = Math.round((sumWaterAmount / waterRate) * 100);
     return {
-      currenYeartMonth,
+      currentYearMonth,
       date: req.query.date,
       reqStart: start,
       reqEnd: end,
       realStartDate: startDate,
-      realEndtDate: endDate,
+      realEndDate: endDate,
       dayOfMonth,
       waterRate,
       percent,
