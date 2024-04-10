@@ -19,7 +19,7 @@ const waterSchema = new Schema(
       type: Number,
       min: 0,
       max: 15000,
-      default: 0,
+      default: 2000,
     },
     user: {
       type: Schema.Types.ObjectId,
