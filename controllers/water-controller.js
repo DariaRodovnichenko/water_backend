@@ -44,8 +44,8 @@ const getWaterById = async (req, res) => {
 };
 
 const addWater = async (req, res) => {
-  const { _id: user } = req.user;
-  const { waterAmount, date, dailyWaterRate } = req.body;
+  const { _id: user, waterRate } = req.user;
+  const { waterAmount, date, dailyWaterRate = waterRate} = req.body;
 
   try {
     const result = await Water.create({
