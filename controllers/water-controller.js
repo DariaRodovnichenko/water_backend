@@ -241,9 +241,10 @@ const getWaterByMonth = async (req, res) => {
         (sumWaterAmount / selectedWaterRecord.sumDailyWaterRate) * 100
       );
       return {
+        date: req.query.date,
         currentYearMonth: date.substring(0, 7),
-        startDate,
-        endDate,
+        reqStart: startDate,
+        reqEnd: endDate,
         dayOfMonth,
         waterRate: selectedWaterRecord.sumDailyWaterRate / count, // Calculate the average dailyWaterRate for the day
         percent,
